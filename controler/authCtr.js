@@ -6,13 +6,13 @@ const secretKey = require("../config/secretKey.json");
 const authCtr = {
     register: async (req, res) => {
         const {username, password} = req.body;
-    const exist = await User.findOne({username: username});
+    const exist = await User.findOne({userName: username});
     if(exist){
         res.status(504).send("user exist");
         return;
     }
     const user = new User({
-        username: username,
+        userName: username,
     });
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -20,10 +20,10 @@ const authCtr = {
     await user.save();
     res.redirect("/");
     },
-    
+
     login: async (req, res) => {
         const {username, password} = req.body;
-        const user = await User.findOne({username: username});
+        const user = await User.findOne({userName: username});
         if(!user){
             res.status(500).send("user not found");
             return;
@@ -35,12 +35,14 @@ const authCtr = {
             return;
         }
 
-        const data = user.toJSON;
+        const data = user.toJSON();
         delete data.password;
         const token = jwt.sign({
             _id: data._id,
-            username: data.username,
-        }, secretKey.key, {
+            username: data.userName,
+        },
+        secretKey.key,
+        {
             expiresIn: "7d",
         });
         res.cookie("access_token", token, {

@@ -10,8 +10,13 @@ router.get("/register", (req, res) => {
     res.render("register");
 });
 
+router.post("/login", authCtr.login);
+
 router.post("/register", authCtr.register);
 
-router.post("/login", authCtr.login);
+router.post("/logout", (req, res) => {
+    res.clearCookie("access_token");
+    res.redirect("/");
+});
 
 module.exports = router;
