@@ -19,4 +19,6 @@ router.post("/delete/:id", checkUser, postCtr.delete);
 
 router.post("/like/:id", checkUser, postCtr.like);
 
+router.post("/comment/:id", checkUser, postCtr.comment);
+
 module.exports = router;
